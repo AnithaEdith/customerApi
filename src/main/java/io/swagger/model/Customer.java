@@ -2,47 +2,69 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import java.util.UUID;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.persistence.*;
 
 /**
  * Customer
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-12T07:12:35.584Z")
-
+@Entity
 public class Customer   {
-  @JsonProperty("id")
-  private UUID id = null;
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonProperty("id")
+  private String id = null;
+
+  @Column
   @JsonProperty("name")
   private String name = null;
 
+  @Column
   @JsonProperty("contactnumber")
-  private BigDecimal contactnumber = null;
+  private int contactnumber ;
 
+  @Column
   @JsonProperty("email")
   private String email = null;
 
+  @Column
   @JsonProperty("address")
   private String address = null;
 
+  @Column
   @JsonProperty("state")
   private String state = null;
 
+  @Column
   @JsonProperty("city")
   private String city = null;
 
+  @Column
   @JsonProperty("zipcode")
-  private BigDecimal zipcode = null;
+  private int zipcode ;
 
-  public Customer id(UUID id) {
+  public Customer() {
+    super();
+  }
+
+  public Customer(String id, String name, int contactnumber, String email, String address, String state, String city, int zipcode) {
+    this.id = id;
+    this.name = name;
+    this.contactnumber = contactnumber;
+    this.email = email;
+    this.address = address;
+    this.state = state;
+    this.city = city;
+    this.zipcode = zipcode;
+  }
+
+  public Customer id(String id) {
     this.id = id;
     return this;
   }
@@ -56,11 +78,11 @@ public class Customer   {
 
   @Valid
 
-  public UUID getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -85,7 +107,7 @@ public class Customer   {
     this.name = name;
   }
 
-  public Customer contactnumber(BigDecimal contactnumber) {
+  public Customer contactnumber(int contactnumber) {
     this.contactnumber = contactnumber;
     return this;
   }
@@ -99,11 +121,11 @@ public class Customer   {
 
   @Valid
 
-  public BigDecimal getContactnumber() {
+  public int getContactnumber() {
     return contactnumber;
   }
 
-  public void setContactnumber(BigDecimal contactnumber) {
+  public void setContactnumber(int contactnumber) {
     this.contactnumber = contactnumber;
   }
 
@@ -191,7 +213,7 @@ public class Customer   {
     this.city = city;
   }
 
-  public Customer zipcode(BigDecimal zipcode) {
+  public Customer zipcode(int zipcode) {
     this.zipcode = zipcode;
     return this;
   }
@@ -205,11 +227,11 @@ public class Customer   {
 
   @Valid
 
-  public BigDecimal getZipcode() {
+  public int getZipcode() {
     return zipcode;
   }
 
-  public void setZipcode(BigDecimal zipcode) {
+  public void setZipcode(int zipcode) {
     this.zipcode = zipcode;
   }
 
