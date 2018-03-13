@@ -19,7 +19,7 @@ public class Customer   {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("id")
-  private String id = null;
+  private Integer id ;
 
   @Column
   @JsonProperty("name")
@@ -53,7 +53,7 @@ public class Customer   {
     super();
   }
 
-  public Customer(String id, String name, int contactnumber, String email, String address, String state, String city, int zipcode) {
+  public Customer(int id, String name, int contactnumber, String email, String address, String state, String city, int zipcode) {
     this.id = id;
     this.name = name;
     this.contactnumber = contactnumber;
@@ -64,7 +64,7 @@ public class Customer   {
     this.zipcode = zipcode;
   }
 
-  public Customer id(String id) {
+  public Customer id(int id) {
     this.id = id;
     return this;
   }
@@ -75,14 +75,12 @@ public class Customer   {
   **/
   @ApiModelProperty(example = "d290f1ee-6c54-4b01-90e6-d701748f0851", required = true, value = "")
   @NotNull
-
   @Valid
-
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -118,9 +116,7 @@ public class Customer   {
   **/
   @ApiModelProperty(example = "123.0", required = true, value = "")
   @NotNull
-
   @Valid
-
   public int getContactnumber() {
     return contactnumber;
   }

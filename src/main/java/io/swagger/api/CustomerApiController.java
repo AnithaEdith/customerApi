@@ -7,6 +7,7 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,17 +59,48 @@ public class CustomerApiController implements CustomerApi {
         String accept = request.getHeader("Accept");
 
         if (accept != null && accept.contains("application/json")) {
-            try {
+           try{
                 final List<Customer> customerResults =customerService.listcustomers();
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+                log.info("retrieved list of customers " + customerResults.size() + customerResults);
                 //final String customerResults = "[ {  \"zipcode\" : 123451.0,  \"address\" : \"Address 1\",  \"contactnumber\" : 123.0,  \"city\" : \"Cuennai\",  \"name\" : \"Customer 1\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\",  \"state\" : \"Tamil Nadu\",  \"email\" : \"abc@def.com\"}, {  \"zipcode\" : 123451.0,  \"address\" : \"Address 1\",  \"contactnumber\" : 123.0,  \"city\" : \"Cuennai\",  \"name\" : \"Customer 1\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\",  \"state\" : \"Tamil Nadu\",  \"email\" : \"abc@def.com\"} ]";
-                return new ResponseEntity<List<Customer>>(objectMapper.readValue((JsonParser) customerResults, List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                return new ResponseEntity<List<Customer>>(customerResults, HttpStatus.OK);
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<List<Customer>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<List<Customer>>(HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<List<Customer>>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<Customer> customersearchbyQueryParam(Integer id, Integer zipcode) {
+        log.info("inside customersearchbyQueryParam");
+        String accept = request.getHeader("Accept");
+        Customer customer=new Customer();
+        if (accept != null && accept.contains("application/json")) {
+            if(!isNullorZero(id) || !isNullorZero(zipcode) ){
+                log.info("inside customersearchbyQueryParam2");
+                if (!isNullorZero(id)) {
+                    log.info("id value is " + id);
+
+                    customer = customerService.listcustomerbyid(id);
+
+                }
+                if (!isNullorZero(zipcode)) {
+                    log.info("zip value is " + zipcode);
+                    customer = customerService.listcustomerbyZipCode(zipcode.intValue());
+
+                }
+                return new ResponseEntity<Customer>(customer,HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<Customer>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public static boolean isNullorZero(Integer i){
+        return 0 == ( i == null ? 0 : i);
+    }
 }
