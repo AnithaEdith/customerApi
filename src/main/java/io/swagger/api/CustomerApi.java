@@ -58,4 +58,10 @@ public interface CustomerApi {
     @RequestMapping(value = "/customersearch",produces = { "application/json" }, method = RequestMethod.GET)
     ResponseEntity<Customer> customersearchbyQueryParam(@RequestParam(value = "id", required = false,defaultValue="0") Integer id, @RequestParam(value = "zipcode", required = false, defaultValue="0") Integer zipcode);
 
+    @RequestMapping(value = "/customer",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Customer> updatesCustomers(@ApiParam(value = "customer item to add"  )  @Valid @RequestBody Customer customer);
+
 }

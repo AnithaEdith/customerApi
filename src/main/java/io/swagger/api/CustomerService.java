@@ -47,4 +47,8 @@ public class CustomerService {
     }
 
 
+    public void deleteCustomerById(int customerId) {
+        customerRepository.delete(customerId);
+    }
+
 }

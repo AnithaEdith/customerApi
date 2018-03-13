@@ -1,6 +1,5 @@
 package io.swagger.api;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.Swagger2SpringBoot;
 import io.swagger.model.Customer;
@@ -10,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,7 @@ import static org.mockito.BDDMockito.given;
 @SpringBootTest(classes = Swagger2SpringBoot.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(
         locations = "classpath:application-integrationtest.properties")
-public class CustomerApiControllerTest {
+public class ITCustomerApiControllerTest {
 
     @LocalServerPort
     private int port;
@@ -50,11 +48,12 @@ public class CustomerApiControllerTest {
     private CustomerService customerService;
 
     HttpHeaders headers = new HttpHeaders();
-    private static final Logger log = LoggerFactory.getLogger(CustomerApiControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ITCustomerApiControllerTest.class);
 
     @Before
     public void setup() {
         Customer customer=new Customer(1, "Anitha", 912, "anc@gmail.com", "addr1" ,"state1", "c", 12354);
+        Customer updatecustomer=new Customer(1, "Anitha1", 912, "anc1@gmail.com", "addr2" ,"state2", "c", 12354);
         given(this.customerService.
                 listcustomerbyid(1)
         ).willReturn(customer);
@@ -62,6 +61,10 @@ public class CustomerApiControllerTest {
         given(this.customerService.
                 listcustomerbyZipCode(12345)
         ).willReturn(customer);
+
+        given(this.customerService.
+                addcustomer(updatecustomer)
+        ).willReturn(updatecustomer);
     }
 
     @Test
@@ -82,7 +85,6 @@ public class CustomerApiControllerTest {
 
     @Test
     public void testSearchCustomerById() throws JSONException {
-
         headers.add("Accept","application/json");
         String searchcustomerByIdQuery = createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customersearch");
 
@@ -124,7 +126,24 @@ public class CustomerApiControllerTest {
         String expected="Anitha";
         assertNotNull( response.getBody().toString());
         Assert.assertEquals(expected, actual);
+    }
 
+    @Test
+    public void updateCustomerTest() throws JSONException, IOException {
+        headers.add("Accept","application/json");
+
+        Customer customer=new Customer(1, "Anitha1", 912, "anc@gmail.com", "addr1" ,"state1", "c", 12354);
+        HttpEntity<Customer> entity = new HttpEntity<Customer>(customer, headers);
+        ResponseEntity<Customer> response = restTemplate.exchange(
+                createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customer"),
+                HttpMethod.PUT, entity, Customer.class);
+
+        Customer responseBody = response.getBody();
+        String actual=responseBody.getName().toString();
+
+        String expected="Anitha1";
+        assertNotNull( response.getBody().toString());
+        Assert.assertEquals(expected, actual);
     }
 
     private String createURLWithPort(String uri) {

@@ -100,6 +100,16 @@ public class CustomerApiController implements CustomerApi {
         return new ResponseEntity<Customer>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+        public ResponseEntity<Customer> updatesCustomers(@RequestBody Customer customer) {
+        log.info(" inside updatesCustomers" + customer.getName());
+        String accept = request.getHeader("Accept");
+        customerService.addcustomer(customer);
+        log.info(" inside updatesCustomers" + customer.getName());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+        return new ResponseEntity<Customer>(customer, HttpStatus.OK);    }
+
     public static boolean isNullorZero(Integer i){
         return 0 == ( i == null ? 0 : i);
     }
