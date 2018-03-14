@@ -1,9 +1,7 @@
 package io.swagger.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.Swagger2SpringBoot;
 import io.swagger.model.Customer;
-import io.swagger.repository.CustomerRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,15 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
-
 
 @RunWith( SpringRunner.class )
 @SpringBootTest( classes = Swagger2SpringBoot.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
@@ -45,12 +40,16 @@ public class ITCustomerApiControllerTest {
     private TestRestTemplate restTemplate = new TestRestTemplate();
 
     @MockBean
-    private CustomerRepository customerRepository;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
     private CustomerService customerService;
+
+    @Value( "${url.customerByZipCodeuri}" )
+    private String customerByZipCodeQuery;
+
+    @Value( "${url.customerApi}" )
+    private String customerApi;
+
+    @Value( "${serverhost}" )
+    private String serverhost;
 
     private HttpHeaders headers = new HttpHeaders();
     private static final Logger log = LoggerFactory.getLogger(ITCustomerApiControllerTest.class);
@@ -78,13 +77,11 @@ public class ITCustomerApiControllerTest {
         Mockito.doNothing().when(this.customerService).deleteCustomer(customer);
     }
 
-
     @Test
     public void testSearchCustomerByZipCode() {
-
         headers.add("Accept", "application/json");
-        String searchcustomerByZipCodeQuery = createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customersearch");
-
+        String searchcustomerByZipCodeQuery = createURLWithPort(customerByZipCodeQuery);
+        log.info(searchcustomerByZipCodeQuery);
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromUriString(searchcustomerByZipCodeQuery)
                 .queryParam("zipcode", 12345);
@@ -98,7 +95,7 @@ public class ITCustomerApiControllerTest {
     @Test
     public void testSearchCustomerById() {
         headers.add("Accept", "application/json");
-        String searchcustomerByIdQuery = createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customersearch");
+        String searchcustomerByIdQuery = createURLWithPort(customerByZipCodeQuery);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromUriString(searchcustomerByIdQuery)
@@ -114,9 +111,8 @@ public class ITCustomerApiControllerTest {
     public void testRetrieveStudentCourse() {
 
         headers.add("Accept", "application/json");
-        //HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-        ResponseEntity<Customer[]> responseEntity = restTemplate.getForEntity(createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customer"),
+        ResponseEntity<Customer[]> responseEntity = restTemplate.getForEntity(createURLWithPort(customerApi),
                 Customer[].class);
         List<Customer> customers = Arrays.asList(responseEntity.getBody());
         log.info("actual is" + customers);
@@ -129,7 +125,7 @@ public class ITCustomerApiControllerTest {
         Customer customer = new Customer(1, "Anitha", 912, "anc@gmail.com", "addr1", "state1", "c", 12354);
         HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
         ResponseEntity<Customer> response = restTemplate.exchange(
-                createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customer"),
+                createURLWithPort(customerApi),
                 HttpMethod.POST, entity, Customer.class);
 
         Customer responseBody = response.getBody();
@@ -147,7 +143,7 @@ public class ITCustomerApiControllerTest {
         Customer customer = new Customer(1, "Anitha1", 912, "anc@gmail.com", "addr1", "state1", "c", 12354);
         HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
         ResponseEntity<Customer> response = restTemplate.exchange(
-                createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customer"),
+                createURLWithPort(customerApi),
                 HttpMethod.PUT, entity, Customer.class);
 
         Customer responseBody = response.getBody();
@@ -167,9 +163,8 @@ public class ITCustomerApiControllerTest {
         Customer customer = new Customer(1, "Anitha1", 912, "anc@gmail.com", "addr1", "state1", "c", 12354);
         HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
         ResponseEntity<Void> response = restTemplate.exchange(
-                createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customer"),
+                createURLWithPort(customerApi),
                 HttpMethod.DELETE, entity, Void.class);
-
     }
 
     @Test
@@ -179,13 +174,11 @@ public class ITCustomerApiControllerTest {
         Map<String, Integer> params = new HashMap<>();
         params.put("customerId", 1);
 
-        String urlWithPort = createURLWithPort("/AnithaEdith/CustomerAPI/1.0.0/customer/{customerId}");
+        String urlWithPort = createURLWithPort(customerApi + "/{customerId}");
         restTemplate.delete(urlWithPort, params);
     }
 
     private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
+        return serverhost + port + uri;
     }
 }
-
-

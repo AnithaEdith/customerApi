@@ -58,7 +58,6 @@ public class CustomerApiController implements CustomerApi {
 
     public ResponseEntity<Void> deletesCustomerById(@ApiParam( value = "customer item to add" ) @PathVariable( "customerId" ) int customerId) {
         log.info(" inside deletesCustomerById" + customerId);
-
         String accept = request.getHeader("Accept");
         customerService.deleteCustomerById(customerId);
         return new ResponseEntity<Void>(HttpStatus.OK);
@@ -94,15 +93,14 @@ public class CustomerApiController implements CustomerApi {
                 log.info("inside customersearchbyQueryParam2");
                 if (!isNullorZero(id)) {
                     log.info("id value is " + id);
-
                     customer = customerService.listcustomerbyid(id);
-
                 }
                 if (!isNullorZero(zipcode)) {
                     log.info("zip value is " + zipcode);
                     customer = customerService.listcustomerbyZipCode(zipcode.intValue());
-
                 }
+
+                log.info("customer is " + customer);
                 return new ResponseEntity<Customer>(customer, HttpStatus.OK);
             }
         }

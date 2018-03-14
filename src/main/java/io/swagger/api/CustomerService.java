@@ -18,7 +18,7 @@ public class CustomerService {
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     public Customer listcustomerbyZipCode(int zipcode) {
-        log.info(" inside listcustomerbyid");
+        log.info(" inside listcustomerbyZipCode");
         Customer customer = customerRepository.findByZipcode(zipcode);
         log.info(" customers.size" + customer.getName());
         return customer;

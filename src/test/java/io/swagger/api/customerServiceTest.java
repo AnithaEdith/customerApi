@@ -23,11 +23,13 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration
 public class customerServiceTest {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private CustomerService customerService;
 
     @Autowired
     private CustomerRepository customerRepository;
+
     private Customer customer = new Customer(1, "Anitha", 912, "anc@gmail.com", "addr1", "state1", "c", 12354);
 
     @Configuration
@@ -79,7 +81,4 @@ public class customerServiceTest {
         logger.info("customers" + customers.getName());
         assertNotNull(customers);
     }
-
 }
-
-

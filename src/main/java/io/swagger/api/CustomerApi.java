@@ -53,7 +53,6 @@ public interface CustomerApi {
             method = RequestMethod.GET )
     ResponseEntity<List<Customer>> searchCustomers(@ApiParam( value = "pass an optional search string for looking up customers" ) @Valid @RequestParam( value = "searchString", required = false ) String searchString, @Min( 0 ) @ApiParam( value = "number of records to skip for pagination" ) @Valid @RequestParam( value = "skip", required = false ) Integer skip, @Min( 0 ) @Max( 50 ) @ApiParam( value = "maximum number of records to return" ) @Valid @RequestParam( value = "limit", required = false ) Integer limit);
 
-
     @RequestMapping( value = "/customersearch", produces = {"application/json"}, method = RequestMethod.GET )
     ResponseEntity<Customer> customersearchbyQueryParam(@RequestParam( value = "id", required = false, defaultValue = "0" ) Integer id, @RequestParam( value = "zipcode", required = false, defaultValue = "0" ) Integer zipcode);
 
