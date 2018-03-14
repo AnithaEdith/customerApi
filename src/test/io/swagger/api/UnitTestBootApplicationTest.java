@@ -1,4 +1,4 @@
-package io.swagger;
+package io.swagger.api;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,4 +12,7 @@ public class UnitTestBootApplicationTest {
     public void contextLoads() {
     }
 
+    @Test
+    public void contextLoads1() {
+    }
 }

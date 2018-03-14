@@ -8,10 +8,7 @@ package io.swagger.api;
 import io.swagger.model.Customer;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -63,5 +60,10 @@ public interface CustomerApi {
             consumes = { "application/json" },
             method = RequestMethod.PUT)
     ResponseEntity<Customer> updatesCustomers(@ApiParam(value = "customer item to add"  )  @Valid @RequestBody Customer customer);
+
+
+    @RequestMapping( value = "/customer/{customerId}",
+            method = RequestMethod.DELETE )
+    ResponseEntity<Void> deletesCustomerById(@ApiParam( value = "customer item to delete with Id" ) @PathVariable( "customerId" ) int customerId);
 
 }

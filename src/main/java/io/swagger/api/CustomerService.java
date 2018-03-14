@@ -13,7 +13,7 @@ import java.util.List;
 public class CustomerService {
 
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
@@ -46,9 +46,12 @@ public class CustomerService {
         return customer;
     }
 
-
     public void deleteCustomerById(int customerId) {
+        log.info(" inside deletesCustomerById in CustomerService" + customerId);
         customerRepository.delete(customerId);
     }
 
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -52,7 +53,16 @@ public class CustomerApiController implements CustomerApi {
 
     public ResponseEntity<Void> deletesCustomers(@ApiParam(value = "customer item to add"  )  @Valid @RequestBody Customer customer) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        customerService.deleteCustomer(customer);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> deletesCustomerById(@ApiParam( value = "customer item to add" ) @PathVariable( "customerId" ) int customerId) {
+        log.info(" inside deletesCustomerById" + customerId);
+
+        String accept = request.getHeader("Accept");
+        customerService.deleteCustomerById(customerId);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<List<Customer>> searchCustomers(@ApiParam(value = "pass an optional search string for looking up customers") @Valid @RequestParam(value = "searchString", required = false) String searchString,@Min(0)@ApiParam(value = "number of records to skip for pagination") @Valid @RequestParam(value = "skip", required = false) Integer skip,@Min(0) @Max(50) @ApiParam(value = "maximum number of records to return") @Valid @RequestParam(value = "limit", required = false) Integer limit) {

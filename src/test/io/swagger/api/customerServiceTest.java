@@ -21,16 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class customerServiceTest {
-    Logger logger= LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private CustomerService customerService;
 
     @Autowired
     private CustomerRepository customerRepository;
+    private Customer customer = new Customer(1, "Anitha", 912, "anc@gmail.com", "addr1", "state1", "c", 12354);
 
     @Configuration
     static class AccountServiceTestContextConfiguration {
@@ -43,7 +45,6 @@ public class customerServiceTest {
             return Mockito.mock(CustomerRepository.class);
         }
     }
-    Customer customer=new Customer(1, "Anitha", 912, "anc@gmail.com", "addr1" ,"state1", "c", 12354);
 
     @Before
     public void setup() {
@@ -82,10 +83,6 @@ public class customerServiceTest {
         assertNotNull( customers);
     }
 
-    @Test
-    public void deletecustomerbyId(int customerId) {
-        customerService.deleteCustomerById(customerId);
-    }
 }
 
 
