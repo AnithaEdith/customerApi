@@ -13,10 +13,9 @@ import java.util.List;
 @Component
 public class CustomerService {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
     @Autowired
     private CustomerRepository customerRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     public Customer listcustomerbyZipCode(int zipcode) {
         log.info(" inside listcustomerbyZipCode");

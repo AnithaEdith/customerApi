@@ -32,19 +32,6 @@ public class customerServiceTest {
 
     private Customer customer = new Customer(1, "Anitha", 912, "anc@gmail.com", "addr1", "state1", "c", 12354);
 
-    @Configuration
-    static class AccountServiceTestContextConfiguration {
-        @Bean
-        public CustomerService customerService() {
-            return new CustomerService();
-        }
-
-        @Bean
-        public CustomerRepository customerRepository() {
-            return Mockito.mock(CustomerRepository.class);
-        }
-    }
-
     @Before
     public void setup() {
         List<Customer> customers = new ArrayList<>();
@@ -81,5 +68,18 @@ public class customerServiceTest {
         Customer customers = customerService.listcustomerbyZipCode(12354);
         logger.info("customers" + customers.getName());
         assertNotNull(customers);
+    }
+
+    @Configuration
+    static class AccountServiceTestContextConfiguration {
+        @Bean
+        public CustomerService customerService() {
+            return new CustomerService();
+        }
+
+        @Bean
+        public CustomerRepository customerRepository() {
+            return Mockito.mock(CustomerRepository.class);
+        }
     }
 }

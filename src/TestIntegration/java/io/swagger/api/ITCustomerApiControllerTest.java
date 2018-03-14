@@ -2,7 +2,9 @@ package io.swagger.api;
 
 import io.swagger.Swagger2SpringBoot;
 import io.swagger.model.Customer;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
@@ -16,10 +18,12 @@ import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static org.junit.Assert.assertNotNull;
 
 @RunWith( SpringRunner.class )
@@ -29,29 +33,27 @@ import static org.junit.Assert.assertNotNull;
 @FixMethodOrder( MethodSorters.NAME_ASCENDING )
 public class ITCustomerApiControllerTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ITCustomerApiControllerTest.class);
+    private static int customerId1 = 1;
+    private static int customerId2 = 2;
     @LocalServerPort
     private int port;
-
     private TestRestTemplate restTemplate = new TestRestTemplate();
-
-    private static int customerId1;
-
     @Value( "${url.customerByZipCodeuri}" )
     private String customerByZipCodeQuery;
-
     @Value( "${url.customerApi}" )
     private String customerApi;
-    private static int customerId2;
 
     @Value( "${serverhost}" )
     private String serverhost;
+
     @Autowired
     private CustomerService customerService;
+
     @Value( "${url.deleteCustomers}" )
     private String deleteCustomers;
 
     private HttpHeaders headers = new HttpHeaders();
-    private static final Logger log = LoggerFactory.getLogger(ITCustomerApiControllerTest.class);
 
     @Test
     public void addCustomerTest() {
@@ -145,6 +147,7 @@ public class ITCustomerApiControllerTest {
 
         ResponseEntity<Customer> responseEntity = searchPostUpdate(customerId1);
         Customer updatedResponse = responseEntity.getBody();
+
         Assert.assertEquals(expected, updatedResponse.getName());
         log.info("updated value from search" + updatedResponse.getName());
         log.info(response.getHeaders().toString());
