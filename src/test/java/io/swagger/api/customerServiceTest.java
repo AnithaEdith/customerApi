@@ -49,6 +49,7 @@ public class customerServiceTest {
     public void setup() {
         List<Customer> customers = new ArrayList<>();
         customers.add(customer);
+        Mockito.when(customerRepository.save(Mockito.any(Customer.class))).thenReturn(customer);
         Mockito.when(customerRepository.findAll()).thenReturn(customers);
         Mockito.when(customerRepository.getOne(Mockito.anyInt())).thenReturn(customer);
         Mockito.when(customerRepository.findByZipcode(Mockito.anyInt())).thenReturn(customer);

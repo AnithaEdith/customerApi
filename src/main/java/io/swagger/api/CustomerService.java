@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Component
@@ -26,8 +27,17 @@ public class CustomerService {
 
     public Customer listcustomerbyid(int customerid) {
         log.info(" inside listcustomerbyid");
-        Customer customer = customerRepository.getOne(customerid);
-        log.info(" customers.size" + customer.getName());
+        Customer customer;
+        try {
+            customer = customerRepository.getOne(customerid);
+            if (customer != null && !customer.equals(null)) {
+                log.info(" customers.size" + customer.getName());
+            }
+        } catch (EntityNotFoundException entityNotFoundException) {
+            log.info(" EntityNotFoundException exception");
+            return null;
+        }
+        log.info(" end of listcustomerbyid");
         return customer;
     }
 
@@ -41,9 +51,9 @@ public class CustomerService {
 
     public Customer addcustomer(Customer customer) {
         log.info(" inside addcustomer" + customer.getName());
-        customerRepository.save(customer);
+        Customer addedcustomer = customerRepository.save(customer);
         log.info(" savedcustomer" + customer.getName());
-        return customer;
+        return addedcustomer;
     }
 
     public void deleteCustomerById(int customerId) {
@@ -54,4 +64,9 @@ public class CustomerService {
     public void deleteCustomer(Customer customer) {
         customerRepository.delete(customer);
     }
+
+    public void deleteAllCustomers() {
+        customerRepository.deleteAll();
+    }
+
 }

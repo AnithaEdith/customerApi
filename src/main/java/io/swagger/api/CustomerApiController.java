@@ -20,6 +20,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @javax.annotation.Generated( value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-12T07:12:35.584Z" )
 
 @Controller
@@ -34,7 +36,7 @@ public class CustomerApiController implements CustomerApi {
     @Autowired
     private CustomerService customerService;
 
-    @org.springframework.beans.factory.annotation.Autowired
+    @Autowired
     public CustomerApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
@@ -43,11 +45,11 @@ public class CustomerApiController implements CustomerApi {
     public ResponseEntity<Customer> addCustomers(@ApiParam( value = "customer item to add" ) @Valid @RequestBody Customer customer) {
         log.info(" inside addCustomers" + customer.getName());
         String accept = request.getHeader("Accept");
-        customerService.addcustomer(customer);
+        Customer addedcustomer = customerService.addcustomer(customer);
         log.info(" inside addCustomers" + customer.getName());
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
-        return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
+        return new ResponseEntity<Customer>(addedcustomer, HttpStatus.CREATED);
     }
 
     public ResponseEntity<Void> deletesCustomers(@ApiParam( value = "customer item to add" ) @Valid @RequestBody Customer customer) {
@@ -63,6 +65,12 @@ public class CustomerApiController implements CustomerApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+    public ResponseEntity<Void> deletesAllCustomers() {
+        log.info(" inside deleteall");
+        customerService.deleteAllCustomers();
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
     public ResponseEntity<List<Customer>> searchCustomers(@ApiParam( value = "pass an optional search string for looking up customers" ) @Valid @RequestParam( value = "searchString", required = false ) String searchString, @Min( 0 ) @ApiParam( value = "number of records to skip for pagination" ) @Valid @RequestParam( value = "skip", required = false ) Integer skip, @Min( 0 ) @Max( 50 ) @ApiParam( value = "maximum number of records to return" ) @Valid @RequestParam( value = "limit", required = false ) Integer limit) {
         String accept = request.getHeader("Accept");
 
@@ -72,14 +80,12 @@ public class CustomerApiController implements CustomerApi {
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
                 log.info("retrieved list of customers " + customerResults.size() + customerResults);
-                //final String customerResults = "[ {  \"zipcode\" : 123451.0,  \"address\" : \"Address 1\",  \"contactnumber\" : 123.0,  \"city\" : \"Cuennai\",  \"name\" : \"Customer 1\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\",  \"state\" : \"Tamil Nadu\",  \"email\" : \"abc@def.com\"}, {  \"zipcode\" : 123451.0,  \"address\" : \"Address 1\",  \"contactnumber\" : 123.0,  \"city\" : \"Cuennai\",  \"name\" : \"Customer 1\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\",  \"state\" : \"Tamil Nadu\",  \"email\" : \"abc@def.com\"} ]";
                 return new ResponseEntity<List<Customer>>(customerResults, HttpStatus.OK);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<List<Customer>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
         return new ResponseEntity<List<Customer>>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -94,17 +100,20 @@ public class CustomerApiController implements CustomerApi {
                 if (!isNullorZero(id)) {
                     log.info("id value is " + id);
                     customer = customerService.listcustomerbyid(id);
-                }
-                if (!isNullorZero(zipcode)) {
+                } else if (!isNullorZero(zipcode)) {
                     log.info("zip value is " + zipcode);
                     customer = customerService.listcustomerbyZipCode(zipcode.intValue());
+                } else {
+                    return new ResponseEntity<Customer>(HttpStatus.NO_CONTENT);
                 }
 
-                log.info("customer is " + customer);
-                return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+                if (customer != null && !isEmpty(customer)) {
+                    log.info("customer is not empty");
+                    return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+                }
             }
         }
-        return new ResponseEntity<Customer>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Customer>(HttpStatus.NO_CONTENT);
     }
 
     @Override

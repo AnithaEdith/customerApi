@@ -67,4 +67,8 @@ public interface CustomerApi {
             method = RequestMethod.DELETE )
     ResponseEntity<Void> deletesCustomerById(@ApiParam( value = "customer item to delete with Id" ) @PathVariable( "customerId" ) int customerId);
 
+    @RequestMapping( value = "/customers",
+            method = RequestMethod.DELETE )
+    ResponseEntity<Void> deletesAllCustomers();
+
 }

@@ -17,6 +17,7 @@ import java.util.Objects;
 @Entity
 public class Customer {
 
+
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     @JsonProperty( "id" )
@@ -56,6 +57,16 @@ public class Customer {
 
     public Customer(int id, String name, int contactnumber, String email, String address, String state, String city, int zipcode) {
         this.id = id;
+        this.name = name;
+        this.contactnumber = contactnumber;
+        this.email = email;
+        this.address = address;
+        this.state = state;
+        this.city = city;
+        this.zipcode = zipcode;
+    }
+
+    public Customer(String name, int contactnumber, String email, String address, String state, String city, int zipcode) {
         this.name = name;
         this.contactnumber = contactnumber;
         this.email = email;
