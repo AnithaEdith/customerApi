@@ -18,23 +18,23 @@ public class CustomerService {
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     public Customer listcustomerbyZipCode(int zipcode) {
-        log.info(" inside listcustomerbyid" );
+        log.info(" inside listcustomerbyid");
         Customer customer = customerRepository.findByZipcode(zipcode);
-        log.info(" customers.size" + customer.getName() );
+        log.info(" customers.size" + customer.getName());
         return customer;
     }
 
     public Customer listcustomerbyid(int customerid) {
-        log.info(" inside listcustomerbyid" );
+        log.info(" inside listcustomerbyid");
         Customer customer = customerRepository.getOne(customerid);
-        log.info(" customers.size" + customer.getName() );
+        log.info(" customers.size" + customer.getName());
         return customer;
     }
 
     public List<Customer> listcustomers() {
-        log.info(" inside listcustomers" );
+        log.info(" inside listcustomers");
         List<Customer> customers = customerRepository.findAll();
-        log.info(" customers.size" + customers.size() );
+        log.info(" customers.size" + customers.size());
 
         return customers;
     }
