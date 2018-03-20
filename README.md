@@ -16,3 +16,7 @@ You can view the api documentation in swagger-ui by pointing to
 http://localhost:6080/
 
 Change default port value in application.properties
+
+Junit Test: mvn clean test -P dev
+Integration Test: mvn clean verify -P integration-test
+Swagger API: /CustomerAPI/1.0.0/swagger-ui.html

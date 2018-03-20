@@ -112,7 +112,7 @@ public class CustomerApiController implements CustomerApi {
                 }
 
                 if (customer != null && !isEmpty(customer)) {
-                    log.info("customer is not empty");
+                    log.info("customer is not empty" + customer.getName());
                     return new ResponseEntity<Customer>(customer, HttpStatus.OK);
                 }
             }

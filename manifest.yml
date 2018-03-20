@@ -1,0 +1,13 @@
+---
+applications:
+- name: customerapi
+  memory: 1G
+  disk: 1G
+  instances: 1
+  path: target/customer.jar
+  services:
+    - customer-mysql
+  routes:
+   - route: customerapi.apps.cumuluslabs.io
+  env:
+    spring.jackson.serialization.fail-on-empty-beans: false
